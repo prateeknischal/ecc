@@ -1,0 +1,8 @@
+Foo DEFINITIONS ::= BEGIN
+
+  Point ::= SEQUENCE {
+    r     INTEGER,
+    s     INTEGER
+  }
+
+END

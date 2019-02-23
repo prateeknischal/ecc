@@ -1,0 +1,5 @@
+# Ignore macOS desktop services store files.
+.DS_Store
+
+# Ignore Python cache files.
+*.pyc
