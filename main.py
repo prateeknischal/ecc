@@ -32,7 +32,8 @@ $ openssl dgst -sha256 -verify pub.pem -signature x.txt a.txt
 $ openssl asn1parse -in sign.txt.sha256 -inform DER
 """
 
-from core import ecc, util
+from ecc.core import ecc
+from ecc.utils import util
 import subprocess
 import base64
 

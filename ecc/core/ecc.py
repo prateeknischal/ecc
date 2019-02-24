@@ -4,7 +4,7 @@ import copy
 import hashlib
 import random
 
-from core import util
+from ecc.utils import util
 
 class Point:
     def __init__(self, x, y, **kwargs):

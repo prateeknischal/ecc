@@ -18,7 +18,7 @@ def asn1_marshal(t, filename="data/x.txt"):
     """Marshal the tuple t=(r, s) to ASN1 encoding."""
     r, s = t
     d = {'r': r, 's': s}
-    enc = asn1tools.compile_files('core/sg.asn')
+    enc = asn1tools.compile_files('ecc/utils/sg.asn')
     res = enc.encode('Point', d)
     with open(filename, 'wb') as f:
     	f.write(res)
