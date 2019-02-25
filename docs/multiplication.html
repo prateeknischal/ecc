@@ -9,4 +9,127 @@ $$
 
 Since, this is easy, it comes down to the implementation. The real strength of
 elliptic curves lie in the fact that it is trivially difficult to calculate $v$
-if you are given Q and P. This difficulty is due to inverse log 
+if you are given Q and P. The only way is to try all $v$. If $v$ is sufficiently
+large it's not feasible to brute force it. This is called _Elliptic curve discrete
+logarithm problem_.
+
+Geometrically, for $P + Q = R$, $R$'s position has no relation
+to where $P$ and $Q$ are.
+
+### The Trivial way
+
+```python
+Q = None
+for _ in range(0, v):
+  res = add(res, P)
+```
+
+If $v$ is too large, this calculation is not feasible.
+
+### Point Doubling
+
+This method uses the polynomial representation of $v$ in base 2, or the binary
+notation.
+
+$$
+v = a_0 + a_1x + a_2x^2 + \dots + a_{n-1}x^{n-1}; a_i \in \{0, 1\}
+$$
+
+Now, multiply both sides by $P$
+$$
+vP = a_0P + a_1(xP) + \dots + a_{n-1}(x^{n-1}P)
+$$
+
+substituting $x = 2$
+$$
+vP = a_0P + a_1(2P) + a_2(4P) + \dots + a_{n-1}(2^{n-1}P)
+$$
+
+This can be implemented as:
+```
+Q, d = O, P
+while v != 0:
+    if v % 2:
+      Q = add(Q, d)
+    v = v // 2
+    d = add(d, d)
+return Q
+```
+----
+
+### Order of a curve
+
+Let's look at a concept called **Order of a curve**. It denotes the number of
+points on the curve. There are various approaches to count the number of points
+on the curve.
+
+For example, the bound of order or the cardinality of the curve is given body
+$$
+| |E(\mathbb{F_q})| - (q + 1)| \leq 2\sqrt{q}
+$$
+
+This is called [Hasse's theorem](https://en.wikipedia.org/wiki/Hasse%27s_theorem_on_elliptic_curves)
+
+The Naive approach would be to try all points and see if it satifies the function.
+
+### Inversion on multiplication operation
+
+Since, we have a scalar multiplication, it is easy to invert it.
+$$
+Q = vP
+$$
+
+multiply both sides by $v^{-1} \pmod {|E(\mathbb{F_q})|}$ and we can recover the original point.
+
+$$
+\begin{align}
+P &= v^{-1} Q \\
+P &= v^{-1}v P \\
+v^{-1}v &= 1 + k |E(\mathbb{F_q})|
+\end{align}
+$$
+
+Since, there are in total $|E(\mathbb{F_q})|$ elements, the next addition to
+the last element should also lie in the same Set of the group, so it has to wrap
+around just like addition to the last element in a Field wraps around to $0$.
+
+So, by adding it one more time, it will result in $P$ itself.
+
+$$
+\begin{align}
+\implies &v^{-1}v P \\
+\implies &(1 + k |E(\mathbb{F_q})|) *P \\
+\implies &P + k |E(\mathbb{F_q})| *P \\
+\implies &P + k O \\
+\implies &P
+\end{align}
+$$
+
+Example:
+$$
+E = |E(\mathbb{F_q})|
+$$
+
+For the curve $P-256$ with the Generator point $G$ and the order $E$
+```
+E =   ffff ffff 0000 0000 ffff ffff ffff ffff
+      bce6 faad a717 9e84 f3b9 cac2 fc63 2551
+
+G = (
+      6b17 d1f2 e12c 4247 f8bc e6e5 63a4 40f2
+      7703 7d81 2deb 33a0 f4a1 3945 d898 c296,
+      4fe3 42e2 fe1a 7f9b 8ee7 eb4a 7c0f 9e16
+      2bce 3357 6b31 5ece cbb6 4068 37bf 51f5
+    )
+E * G = ZERO
+E * G + G =
+    (
+      6b17 d1f2 e12c 4247 f8bc e6e5 63a4 40f2
+      7703 7d81 2deb 33a0 f4a1 3945 d898 c296,
+      4fe3 42e2 fe1a 7f9b 8ee7 eb4a 7c0f 9e16
+      2bce 3357 6b31 5ece cbb6 4068 37bf 51f5
+    )
+
+```
+Which is why $v$ must be kept private, thus serves as the _Private key_.Since, it's
+not so easy to reverse $vP$ to get $v$ given $P$, $vP$ serves as the _Public Key_

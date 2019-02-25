@@ -87,10 +87,8 @@ def add(p, q):
     return Point(x, -y).normalize(Curve.mod)
 
 def mul(p, v):
-    if v == 1: return p
-    res = copy.deepcopy(p)
+    res = Point(0, 0, zero=True)
     d = copy.deepcopy(p)
-    v -= 1
     while v > 0:
         if v & 1:
             res = add(res, d)
