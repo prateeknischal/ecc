@@ -1,0 +1,12 @@
+<script src="https://cdn.jsdelivr.net/npm/texme"></script>
+
+## Scalar Multiplication on Elliptic Curves
+
+As already mentioned, scalar multiplication can be seen as multiple additions.
+$$
+v * P = Q, v \in \mathbb{Z}
+$$
+
+Since, this is easy, it comes down to the implementation. The real strength of
+elliptic curves lie in the fact that it is trivially difficult to calculate $v$
+if you are given Q and P. This difficulty is due to inverse log 

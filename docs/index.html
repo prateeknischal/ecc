@@ -142,6 +142,25 @@ $P + (-P) + O = 0$. Observe, that the line drawn through $P$ and $-P$ is a verti
 it meet the curve in that direction, at $[0:1:0]$. it will also meet at $[0:-1:0]$ but that is similar to $O$.
 Thus, we have established the Identity element for addition operation.
 
-#### An interesting observation
+#### Invertability Axiom for point addition
 
-What if there is a line through 2 points on the curve $P$ and $Q$ which never meets the curve again?
+For the $+$ operator, the inverse of the element is easy to find. For a point $P$,
+the inverse $P'$ if $ P + P' = O $, where $O$ is the identity element.
+
+This means that $P' = O + (-P) = -P$.
+Since the curve is symmetric, we can just reflect it on the $X$ axis.
+
+In depth: [Point Addition](addition.html)
+
+----
+
+### Multiplication on the Curve
+
+Point multiplication on the Elliptic curve is defined as repeated additions on the curve.
+$ P = rQ, r \in \mathbb{Z} $ is equivalent to $ P = \underbrace{Q + Q + \dots + Q}_\text{r times}$.
+
+#### Invertability axiom for scalar multiplication
+
+This is a more advanced concept that requires intro to some more concepts.
+
+In depth: [Scalar Multiplication](multiplication.html)

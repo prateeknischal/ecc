@@ -52,7 +52,9 @@ if __name__ == '__main__':
         print (base64.standard_b64encode(f.read()))
     print ()
 
-    cmd = ['openssl', 'dgst', '-sha256', '-verify', 'data/pub.pem', '-signature', 'data/x.txt', 'data/a.txt']
+    cmd = ['openssl', 'dgst', '-sha256', '-verify', 'data/pub.pem',
+        '-signature', 'data/x.txt', 'data/a.txt']
     print ('Verify using openssl')
     print (' '.join(cmd))
-    subprocess.run(['openssl', 'dgst', '-sha256', '-verify', 'data/pub.pem', '-signature', 'data/x.txt', 'data/a.txt'])
+    subprocess.run(['openssl', 'dgst', '-sha256', '-verify', 'data/pub.pem',
+        '-signature', 'data/x.txt', 'data/a.txt'])
