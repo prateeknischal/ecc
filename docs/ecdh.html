@@ -1,0 +1,49 @@
+<script src="https://cdn.jsdelivr.net/npm/texme"></script>
+
+## Elliptic Curve Diffie-Hellman Key Exchange
+
+**DH** is a mechanism for establishing a common secret between multiple
+parties. **DH** can use a _Discrete logarithm problem_(**DLP**) to perform
+the Exchange.
+
+We can use:
+* Modular arithmetic for **DHE**
+* Algebraic structures for **ECDH**
+
+Since, elliptic curve multiplication also involves *discrete log problem*, it
+can be used.
+
+### Let's recap Diffie-Hellman Key Exchange
+
+Let there be 2 parties, Alice and Bob who want to exchange a key over an
+insecure channel.
+
+Alice and Bob generate already have a set of parameters $(G, N)$, where $G$
+is the generator and $N$ is a prime number. This is available to everyone.
+
+1. Alice and Bob generate their private integers $a$ and $b$ respectively such
+that $1 \leq a, b \leq N-1$.
+2. Both calculate $G^a \pmod{N}$ and $G^b \pmod{N}$ which are the public keys
+and are exchanged.
+3. Now Alice has $G^b \pmod{N}$ and Bob has $G^a \pmod{N}$.
+4. Alice and Bob raise the exchanged numbers to their generated integers. i.e.
+Alice calculates $(G^b)^a \pmod {N}$ and Bob calculates $(G^a)^b \pmod {N}$
+5. They end up with $G^{ab} \pmod {N}$, which serves as the shared entity.
+
+Since, getting $a$ from $G^a \pmod{N}$, given $G, N$ is equivalent to solving
+the discrete log problem, it is practically not feasible and thus considered secure.
+
+### Using Elliptic Curves for performing the Key Exchange
+
+Let Alice and Bob be 2 parties who want to exchange a key over an insecure channel.
+They already have a set of parameters $(Curve, G, N)$ where $Curve$ is the specific
+Elliptic Curve, $G$ is a generator point on the curve, $N$ is the order of the
+curve.
+
+1. Alice and Bob generate their private integers $a$ and $b$ respectively such
+that $1 \leq a, b \leq N-1$.
+2. Both calculate $aG$ and $bG$ which are their public keys and are exchanged.
+3. Alice has $b * G$ and Bob has $a * G$.
+4. Alice calculates $b * (aG)$ and Bob calculates $a * (aG)$.
+5. They end up with the same point on the curve $abG$ and use the $X$ coordinate
+as the shared entity.
