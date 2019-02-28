@@ -54,8 +54,8 @@ class Curve:
     def __init__(self):
         pass
 
-def F(p, n = Curve.mod):
-    F = sum(Curve.curve[i] * pow(x, i, n) for i in range(len(curve))) % n
+def F(x, n = Curve.mod):
+    return sum(Curve.curve[i] * pow(x, i, n) for i in range(len(Curve.curve))) % n
 
 def slope(p, q):
     if p.z or q.z:

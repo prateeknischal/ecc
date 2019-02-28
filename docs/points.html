@@ -1,0 +1,21 @@
+<script src="https://cdn.jsdelivr.net/npm/texme"></script>
+
+## Points on the Elliptic Curve
+
+For a given curve, it is easy to verify if a point $G$ lies on it or not. All
+calculations are done in the $\mathbb{GF(p)}$ for the curve specification.
+eg:
+
+For [secp256k1](https://en.bitcoin.it/wiki/Secp256k1), which is used in bitcoin,
+$$
+y^2 = x^3 + 7
+$$
+
+```
+G = (
+      6b17 d1f2 e12c 4247 f8bc e6e5 63a4 40f2
+      7703 7d81 2deb 33a0 f4a1 3945 d898 c296,
+      4fe3 42e2 fe1a 7f9b 8ee7 eb4a 7c0f 9e16
+      2bce 3357 6b31 5ece cbb6 4068 37bf 51f5
+    )
+```

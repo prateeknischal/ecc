@@ -1,0 +1,165 @@
+<script src="https://cdn.jsdelivr.net/npm/texme"></script>
+
+## Solving Quadratic modular equations
+
+### Basics
+
+### Multiplicative order
+
+For a given integer $a$ in the field $\mathbb{Z/pZ}$, i.e. Prime field $p$, such
+that $gcd(a, n) = 1$, the smallest integer $k$ is the Multiplicative order of $a$
+iff
+$$
+a^k \equiv 1 \pmod{p}
+$$
+
+### Quadratic Residues and non-residues
+
+An integer $q$ is called a Quadratic Residue in $\mathbb{Z/pZ}$ if there exists
+an integer $x$ such that
+
+$$
+x^2 \equiv q \pmod{p}
+$$
+
+If there exists no solution, then $q$ is a non-residue.
+
+### Legendre Symbol
+
+Legendre symbol is a Multiplicative function with values ${-1, 0, 1}$ that denotes
+if a number belongs to quadratic residue or not.
+
+It is defined as:
+
+$$
+\left ( \frac{a}{p} \right ) =
+\left\{
+  \begin{matrix}
+    0  &a \equiv 0 \pmod{p} \\
+    1  &\text{a is quadratic residue} \\
+    -1 &\text{a is quadratic non-residue} \\
+  \end{matrix}
+\right.
+$$
+
+### Translation of Legendre symbol into Fermat's little theorem
+
+The Legendre symbols can be evaluated using Fermat's little theorem.
+For $a$ in $\mathbb{Z/pZ}$, what $p$ is and odd prime such that $gcd(a, p) = 1$,
+$$
+a^{p-1} \equiv 1 \pmod{p} \\
+(a^{\frac{p-1}{2}} - 1)(a^{\frac{p-1}{2}} + 1) \equiv 0 \pmod{p}
+$$
+
+This means either, $a^{\frac{p-1}{2}} \equiv 1 \pmod{p}$ or
+$a^{\frac{p-1}{2}} \equiv -1 \pmod{p}$
+
+if $x^2 \equiv a \pmod{p}$, i.e. some $x$ exists, then
+$$
+a^{\frac{p - 1}{2}} \equiv (x^2)^{\frac{p - 1}{2}} \equiv x^{p-1} \equiv 1 \pmod{p}
+$$
+thus, satisfying the equation.
+
+Since, $a^{\frac{p - 1}{2}} \equiv 1 \pmod{1}$ is solvable for $a$ and is of
+degree $\frac{p - 1}{2}$, there can't me more than $\frac{p - 1}{2}$ roots for
+this equation ([Lagrange's Theorem](https://en.wikipedia.org/wiki/Lagrange%27s_theorem_(number_theory))).
+
+Which means, all other points are non-residues as we found all the residues.
+Since, the equation has to be satified, all other $\frac{p - 1}{2}$ numbers should
+now satisfy $a^{\frac{p-1}{2}} \equiv -1 \pmod{p}$.
+
+**Note**: We are ignoring $0$ in this counting as $0|p$ and thus $\left (\frac{0}{p} \right ) = 0$
+
+
+Thus, correlating Legendre's symbol and Fermat's little theorem. This is called
+[Euler's Criterion](https://en.wikipedia.org/wiki/Euler%27s_criterion).
+
+### Primitive Roots modulo $p$
+
+A number $g$ in $\mathbb{Z/pZ}$ is called a primitive root if every number that is
+co-prime to $p$ is congruent modulo a power of $g$.
+
+It can also be explained as Suppose the Set $S = \{n : gcd(n, p) = 1, n \in \mathbb{Z/pZ}\}$,
+there exists a $k$ for each element $n$ in the set $S$ such that $g^k \equiv n \pmod{p}$.
+
+A number $g$ is a primitive root then then Multiplicative Order for m is $\varphi(n)$,
+where $\varphi$ is the **Euler Totient Function**.
+
+**Claim**: $\left (\frac{g}{p} \right ) = -1$, where g is a primitive root
+
+**Proof**
+
+Since, $g^{p-1} \equiv 1 \pmod{p}$ (for a prime $\varphi{p} = p - 1$), and $p-1$
+is the multiplicative order, $g^k \not\equiv 1 \pmod{p}$ for $k < p - 1$.
+
+$$
+\begin{align}
+g^{\frac{p-1}{2}} &\equiv -1 \pmod{p} \\
+\left (\frac{g}{p} \right ) &= -1
+\end{align}
+$$
+
+## Tonelli-Shanks algorithm
+
+The [Tonelli-Shanks algorithm](https://en.wikipedia.org/wiki/Tonelli%E2%80%93Shanks_algorithm)
+is used to solve $x^2 \equiv a \pmod{p}$ where $p$ is a prime.
+
+**PS**: References are taken from [MIT OCW - Theory of numbers](https://ocw.mit.edu/courses/mathematics/18-781-theory-of-numbers-spring-2012/lecture-notes/MIT18_781S12_lec11.pdf)
+
+Let's assume a quadratic non-residue $n$ and let $g$ be the primitive root.
+Factor $p - 1 = 2^st$, where $t$ is odd.
+
+Now, set $c \equiv n^t \equiv (g^k)^t \equiv g^{kt}$.
+
+**Claim**: The multiplicative order of $c$ is exactly $2^s$.
+
+**Proof**
+
+$$
+\begin{align}
+c^{2^s} &\equiv (g^{kt})^{2^s} \\
+& \equiv (g^{t2^s})^k \\
+& \equiv (g^{p-1})^k \\
+& \equiv (1)^k \\
+& \equiv 1 \pmod{p}
+\end{align}
+$$
+
+This means, the multiplicative order of $c$, i.e. $ord(c)$ divides $2^s$, as
+if we write $2^s = ord(c)*q$
+
+$$
+c^{2^s} \equiv (c^{ord(c)})^q \equiv 1^q \pmod{p}
+$$
+
+Also, $ord(c)$ must also be a power of $2$ as it divides $2^s$.
+
+Let's calculate $c^{2^{s-1}}$
+
+$$
+\begin{align}
+c^{2^{s-1}} & \equiv (g^{kt})^{2^{s-1}} \\
+& \equiv (g^{t2^{s - 1}})^k \\
+& \equiv (g^{\frac{p - 1}{2}})^k \\
+& \equiv (-1)^k
+\end{align}
+$$
+
+$(10)$ uses $p - 1 = 2^st \implies \frac{p-1}{2} = 2^{s-1}t$
+
+$(11)$ uses the fact that $g$ is a primitive root with order $p-1$ mentioned in
+the **Primitive root modulo $n$** section.
+
+Now if $k$ is even, then $n = (g^{k'})^2 \pmod{p}$, then $n$ would become a quadratic
+residue, which is against the assumption about $n$, hence $k$ is *odd*.
+
+With $k$ as odd, $c^{2^{s-1}} \equiv (-1)^k \equiv -1 \pmod{p}$, also,
+$ord(c)$ must also be a power of $2$.
+
+Let's assume, $c^{2^m} \equiv 1 \pmod{p}; m < s$. If we keep squaring it, we
+should, at some point reach at $((\dots(c^{2^m})^2\dots)^2) = c^{2^{s-1}}$.
+
+According to our assumption $c^{2^m} \equiv 1 \pmod{p}$, squaring should not
+change the congruence and it should still be $1$ when it reaches $c^{2^{s-1}}$.
+But we already know that $c^{2^{s-1}} \equiv -1 \pmod{p}$, which means, there
+exists no such $m$ and hence $ord(c) = 2^s$.
