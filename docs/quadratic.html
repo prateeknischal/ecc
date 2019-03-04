@@ -107,45 +107,45 @@ is used to solve $x^2 \equiv a \pmod{p}$ where $p$ is a prime.
 **PS**: References are taken from [MIT OCW - Theory of numbers](https://ocw.mit.edu/courses/mathematics/18-781-theory-of-numbers-spring-2012/lecture-notes/MIT18_781S12_lec11.pdf)
 
 Let's assume a quadratic non-residue $n$ and let $g$ be the primitive root.
-Factor $p - 1 = 2^st$, where $t$ is odd.
+Factor $p - 1 = 2^St$, where $t$ is odd.
 
 Now, set $c \equiv n^t \equiv (g^k)^t \equiv g^{kt}$.
 
-**Claim**: The multiplicative order of $c$ is exactly $2^s$.
+**Claim**: The multiplicative order of $c$ is exactly $2^S$.
 
 **Proof**
 
 $$
 \begin{align}
-c^{2^s} &\equiv (g^{kt})^{2^s} \\
-& \equiv (g^{t2^s})^k \\
+c^{2^S} &\equiv (g^{kt})^{2^S} \\
+& \equiv (g^{t2^S})^k \\
 & \equiv (g^{p-1})^k \\
 & \equiv (1)^k \\
 & \equiv 1 \pmod{p}
 \end{align}
 $$
 
-This means, the multiplicative order of $c$, i.e. $ord(c)$ divides $2^s$, as
-if we write $2^s = ord(c)*q$
+This means, the multiplicative order of $c$, i.e. $ord(c)$ divides $2^S$, as
+if we write $2^S = ord(c)*q$
 
 $$
-c^{2^s} \equiv (c^{ord(c)})^q \equiv 1^q \pmod{p}
+c^{2^S} \equiv (c^{ord(c)})^q \equiv 1^q \pmod{p}
 $$
 
-Also, $ord(c)$ must also be a power of $2$ as it divides $2^s$.
+Also, $ord(c)$ must also be a power of $2$ as it divides $2^S$.
 
-Let's calculate $c^{2^{s-1}}$
+Let's calculate $c^{2^{S-1}}$
 
 $$
 \begin{align}
-c^{2^{s-1}} & \equiv (g^{kt})^{2^{s-1}} \\
-& \equiv (g^{t2^{s - 1}})^k \\
+c^{2^{S-1}} & \equiv (g^{kt})^{2^{S-1}} \\
+& \equiv (g^{t2^{S - 1}})^k \\
 & \equiv (g^{\frac{p - 1}{2}})^k \\
 & \equiv (-1)^k
 \end{align}
 $$
 
-$(10)$ uses $p - 1 = 2^st \implies \frac{p-1}{2} = 2^{s-1}t$
+$(10)$ uses $p - 1 = 2^St \implies \frac{p-1}{2} = 2^{S-1}t$
 
 $(11)$ uses the fact that $g$ is a primitive root with order $p-1$ mentioned in
 the **Primitive root modulo $n$** section.
@@ -153,13 +153,87 @@ the **Primitive root modulo $n$** section.
 Now if $k$ is even, then $n = (g^{k'})^2 \pmod{p}$, then $n$ would become a quadratic
 residue, which is against the assumption about $n$, hence $k$ is *odd*.
 
-With $k$ as odd, $c^{2^{s-1}} \equiv (-1)^k \equiv -1 \pmod{p}$, also,
+With $k$ as odd, $c^{2^{S-1}} \equiv (-1)^k \equiv -1 \pmod{p}$, also,
 $ord(c)$ must also be a power of $2$.
 
-Let's assume, $c^{2^m} \equiv 1 \pmod{p}; m < s$. If we keep squaring it, we
-should, at some point reach at $((\dots(c^{2^m})^2\dots)^2) = c^{2^{s-1}}$.
+Let's assume, $c^{2^m} \equiv 1 \pmod{p}; m < S$. If we keep squaring it, we
+should, at some point reach at $((\dots(c^{2^m})^2\dots)^2) = c^{2^{S-1}}$.
 
 According to our assumption $c^{2^m} \equiv 1 \pmod{p}$, squaring should not
-change the congruence and it should still be $1$ when it reaches $c^{2^{s-1}}$.
-But we already know that $c^{2^{s-1}} \equiv -1 \pmod{p}$, which means, there
-exists no such $m$ and hence $ord(c) = 2^s$.
+change the congruence and it should still be $1$ when it reaches $c^{2^{S-1}}$.
+But we already know that $c^{2^{S-1}} \equiv -1 \pmod{p}$, which means, there
+exists no such $m$ and hence $ord(c) = 2^S$.
+
+### The Algorithm
+Equation:
+$$
+r^2 \equiv n \pmod{p}
+$$
+1. Factor the prime $p - 1 = Q2^S$ where $Q$ is odd.
+2. Find a $z$ such that $z$ is a quadratic non-residue in $\mathbb{Z/pZ}$
+3. Set $M = S$, $c = z^Q$, $t = n^Q$, $R = n^{\frac{Q + 1}{2}}$
+4. Loop
+    * if $t == 1$, return R.
+    * if $t == 0$, no solution.
+    * Find the least $i$ such that $0 < i < M$ and $t^{2^i} \equiv 1$
+    * Let $b = c^{2^{M - i - 1}}$ and then set, $M = i$, $c = b^2$, $t = tb$, $R = Rb$.
+
+Let's see how this functions on a high level and what are we trying to achieve here.
+
+Step $1$ should be clear, we are beaking the prime to get into powers of $2$ as
+we are trying to reduce $t$ to $1$ while updating $r$ and keeping $n$ same.
+For that we are updating the value of $t$ by a factor of $c$ raised to some
+power of $2$ so that the algorithm runs quicker. Also, note that we had proved
+that $ord(c)$ has to be a power of $2$.
+
+Step $2$, we are using a quadratic non-residue because of the fact that we are
+trying to find a $nt$ still a quadratic residue. (**Unclear understanding**)
+
+Step $3$, we set some initial values.
+
+Step $4$, the actual computation starts. Let's try to compute some values and
+understand what we are trying to achieve.
+
+The first candidate of making $t \equiv 1$ is $n^Q$, because if that works, we
+immediately arrive at the solution as $n^{Q + 1} \equiv n$. We can look at it as
+$n^Q$ is the $2^{S-1}$th root of 1.
+
+Let's start reducing $M$ and try to find the pair $(R, t)$ for it. We are trying
+to do this because, once $M$ reduces to 0, we get $R^2 \equiv n$, which is what
+we are looking for.
+
+Find an $i$ such that $0 < i < M$ and $t^{2^i} \equiv 1 \pmod{p}$.
+
+Now, let's find the pair $(R', t')$, such that $$(R')^2 \equiv n(t')^2$$
+
+Consider $b \equiv c^{2^{M-i-1}}$, $c' \equiv b^2$ and update $M = i$. Multiply both sides of
+the congruence with $b^2$.
+
+$$
+(Rb)^2 \equiv n(tb^2) \pmod{p}
+$$
+Now Observe,
+$$
+\begin{align}
+(c')^{2^{M'-1}} &\equiv (b^2)^{2^{i-1}} \equiv (c^{2^{M-i-1}})^{2^{i-1}} \equiv c^{2^{M-1}} \equiv -1 \pmod{p} \\
+
+(t')^{2^{M' - 1}} &\equiv (tb^2)^{2^{i - 1}} \equiv t^{2^{i - 1}}(c^{2^{M-i}})^{2^{i - 1}} \pmod {p}\\
+
+t^{2^{i - 1}} &\equiv -1 \pmod{p} \\
+
+(c^{2^{M-i}})^{2^{i - 1}} &\equiv c^{2^{M - 1}} \equiv -1 \pmod{p} \\
+\end{align}
+$$
+Eq $(12)$ is -1 because it always results in $M$ which is S and $ord(c) = 2^S$.
+
+Eq $(14)$ is $-1$ because $i$ is the least value, so anything less than it
+can't be $1 \pmod{p}$.
+
+So, from $(14)$ and $(15)$, we can convert $(13)$ to
+$$
+(t')^{2^{M' - 1}} \equiv (-1)(-1) \equiv 1 \pmod {p}
+$$
+Or, it can also be stated as $ord(t) | 2^{M-1}$.
+
+We see that $M$ is strictly decreasing due to $0 < i < M$, the algorithm will exit
+in finite time. If there is no $i$ in the above range, then it's unsolvable.
