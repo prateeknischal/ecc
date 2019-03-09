@@ -1,7 +1,5 @@
 import random
 
-from ecc.core import ecc
-
 def quadratic_residue(n, p):
     """Solve Quadratic Residue for n and prime p.
 
@@ -50,16 +48,3 @@ def find_non_residue(p):
         if pow(n, q, p) == p - 1:
             return n
     return 0
-
-if __name__ == '__main__':
-    print ("Testing using P-256 Generator point")
-    x = ecc.Curve.G.x
-    y = ecc.Curve.G.y
-
-    y_square = ecc.F(x)
-
-    y_sol = quadratic_residue(y_square, ecc.Curve.mod)
-
-    print ("Verified" if y == y_sol else "Solutions don't match !!")
-    print ("Curve.G.y : {}".format(y))
-    print ("Caluclated: {}".format(y_sol))

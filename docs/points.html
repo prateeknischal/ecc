@@ -2,6 +2,8 @@
 
 ## Points on the Elliptic Curve
 
+### Verify a point on the curve
+
 For a given curve, it is easy to verify if a point $G$ lies on it or not. All
 calculations are done in the $\mathbb{GF(p)}$ for the curve specification.
 eg:
@@ -18,4 +20,58 @@ G = (
       4fe3 42e2 fe1a 7f9b 8ee7 eb4a 7c0f 9e16
       2bce 3357 6b31 5ece cbb6 4068 37bf 51f5
     )
+p = (
+      ffff ffff ffff ffff ffff ffff ffff ffff
+      ffff ffff ffff ffff ffff fffe ffff fc2f
+    )
 ```
+Let's try to verify if the Generator point $G$ lies on the curve.
+![verify](assets/point.png)
+<!--
+>>> from ecc.core import ecc
+>>> from ecc import curves
+>>> curve = curves.secp256k1()
+>>> y_sq = curve.F(curve.G.x)
+>>> y_sq == pow(curve.G.y, 2, curve.mod)
+True
+>>>
+-->
+
+The above calculation is to verify if a point $G(x, y)$ lies on the curve. So
+we calculate $G_x^3 + 7 \pmod{p}$ and $G_y^2 \pmod{p}$. If those are equal,
+the point lies on the curve.
+
+### Find $y$ given $x$ on the curve
+
+Given a point $x$, we would have to find a $y$. It seems relatively simple,
+except if this wasn't in $\mathbb{GF(p)}$.
+
+If it wasn't on the prime field, we could have done $\pm\sqrt{x^3 + 7}$, but it's
+not so simple here.
+
+To solve this $x^2 \equiv n \pmod{p}$, it's called Quadratic Congruence equations.
+Here $n$ is called a [Quadratic Residue](https://en.wikipedia.org/wiki/Quadratic_residue)
+modulo $p$.
+
+To do this, we can use the following series of computations. For somewhat detailed
+explanation, please refer [Solving Quadratic modular equations](quadratic.html).
+
+![secp256k1](assets/secp256k1.png)
+<!--
+  (ecc) m-C02RRBLCG8WN (2):ecc p0n002h$ python
+  Python 3.7.1 (default, Nov 28 2018, 11:51:54)
+  [Clang 10.0.0 (clang-1000.11.45.5)] on darwin
+  Type "help", "copyright", "credits" or "license" for more information.
+  >>> from ecc.core import ecc, shanks
+  >>> from ecc import curves
+  >>> curve = curves.secp256k1()
+  >>> print (curve.mul(curve.G, curve.N))
+  Inf
+  >>> y_sq = curve.F(curve.G.x)
+  >>> y_cal = shanks.quadratic_residue(y_sq, curve.mod)
+  >>>
+  >>> print (curve.G.y == y_cal)
+  True
+  >>> print (y_cal)
+  32670510020758816978083085130507043184471273380659243275938904335757337482424
+-->

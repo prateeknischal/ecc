@@ -34,6 +34,7 @@ $ openssl asn1parse -in sign.txt.sha256 -inform DER
 
 from ecc.core import ecc
 from ecc.utils import util
+from ecc.curves import curve_P256
 import subprocess
 import base64
 
@@ -42,8 +43,9 @@ if __name__ == '__main__':
     print ('Elliptic Curve P-256')
     print ()
 
+    curve = curve_P256.P256()
     print ('Sign EC-SHA256: "{}"'.format('This is a sample message'))
-    (r, s) = ecc.sign(b'This is a sample message', pkey)
+    (r, s) = curve.sign(b'This is a sample message', pkey)
     util.asn1_marshal((r, s))
     print ()
 
@@ -56,5 +58,5 @@ if __name__ == '__main__':
         '-signature', 'data/x.txt', 'data/a.txt']
     print ('Verify using openssl')
     print (' '.join(cmd))
-    subprocess.run(['openssl', 'dgst', '-sha256', '-verify', 'data/pub.pem',
-        '-signature', 'data/x.txt', 'data/a.txt'])
+    print(subprocess.run(['openssl', 'dgst', '-sha256', '-verify', 'data/pub.pem',
+        '-signature', 'data/x.txt', 'data/a.txt']).returncode)
