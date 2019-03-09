@@ -82,7 +82,7 @@ class Curve:
         if type(s) != type(bytes()):
             print ("Input needs to be a bytes type object")
             return None
-        z = hashlib.sha256(s).digest()[:256]
+        z = hashlib.sha256(s).digest()[:self.Ln]
         z = int(binascii.hexlify(z), 16)
         k, cp = None, None
         while True:
@@ -99,3 +99,27 @@ class Curve:
 
         print ("({},{})".format(r, s))
         return (r, s)
+
+    def verify(self, m, rs, pubkey):
+        if type(m) != type(bytes()):
+            print ("Input needs to be a bytes type object")
+            return False
+
+        if self.mul(pubkey, self.N).z == False:
+            return False
+
+        r, s = rs
+        if not (1 < r < self.N) or not (1 < s < self.N):
+            return False
+
+        z = hashlib.sha256(m).digest()[:self.Ln]
+        z = int(binascii.hexlify(z), 16)
+
+        w = util.inv(s, self.N)
+        u1 = (z * w) % self.N
+        u2 = (r * w) % self.N
+
+        C = self.add(self.mul(self.G, u1), self.mul(pubkey, u2))
+        if C.z == True: return False
+
+        return r == C.x

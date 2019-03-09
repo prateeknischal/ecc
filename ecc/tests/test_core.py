@@ -28,7 +28,7 @@ class TestECC(unittest.TestCase):
         inf = ecc.Point(0, 0, zero=True)
         self.assertEqual(inf, curve.mul(curve.G, curve.N))
 
-    def test_signature(self):
+    def test_signature_openssl(self):
         pkey = 0x00c3f7c39a9be2418cd89a732e40d648b09fa0af9e909a4fb6864910144b5cbcdf
         print ('Elliptic Curve P-256')
         print ()
@@ -52,3 +52,22 @@ class TestECC(unittest.TestCase):
             'data/pub.pem', '-signature', 'data/x.txt', 'data/a.txt'])
 
         self.assertEqual(r.returncode, 0)
+
+    def test_signature(self):
+        # openssl ec -in ec.pem -noout -text
+        pkey = 0x00c3f7c39a9be2418cd89a732e40d648b09fa0af9e909a4fb6864910144b5cbcdf
+        pubkey = ecc.Point(0x3c75fbf922a60c242fc6222a8a66154df864fada17c6898df07b85bba2e701d3,
+            0x58cce762de61f3f7d172f67ef247a403ce8acb39c9e0cb399f13071902d1bd23)
+
+        curve = curves.P256()
+        rs = curve.sign(b'This is a sample message', pkey)
+
+        print ('Elliptic Curve P-256')
+        print ()
+
+        print ('Signature: {}'.format(rs))
+
+        res = curve.verify(b'This is a sample message', rs, pubkey)
+        print ('Signature Verification: {}'.format(res))
+
+        self.assertEqual(res, True)
