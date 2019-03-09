@@ -7,6 +7,6 @@ deps: FORCE
 	. ./venv && pip3 install -r requirements.txt
 
 test: FORCE
-	. ./venv && python3 main.py
+	. ./venv && python -m unittest discover -s ecc/tests/
 
 FORCE:
