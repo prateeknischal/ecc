@@ -11,7 +11,9 @@ For a Given curve and it's parameters, $(CURVE, G, n)$, where $nG = O$ where $O$
 is identity element and $n$ is prime. This is required so that every element in
 $\mathbb{Z/nZ}$ except $0$ is invertible.
 
-Assume a key-pair $(d_A, Q_A)$
+Assume a key-pair $(d_A, Q_A)$ where $d_A$ is the private key and $Q_A = d_AG$
+is the public key.
+
 * $d_A \in [1, n-1]$.
 * Find the public key curve point $Q_A = d_AG$.
 
@@ -60,14 +62,19 @@ since $r = kG$ in the signature phase, if we compare the final point $C(x, y)$ t
 $r$ and if $r = C_x$, the signature is valid.
 
 ---
+### Retrieving Private key from faulty Signatures ([Sony PS](https://www.engadget.com/2010/12/29/hackers-obtain-ps3-private-cryptography-key-due-to-epic-programm/))
+
 Going back to selection $k$, $k$ needs to be private and also it is recommended
-to select a random $k$ for each and every signature. The reason being
+to select a random $k$ for each and every signature. The reason being.
+If we take the same $k$ for all signatures but different messages, we will have
+the same $r$ as $r = kG$.Which means $r_1 = r_2$.
 $$
 \begin{align}
 (ks - z)r^{-1} &\equiv d_A \pmod{n} \\
-(ks_1 - z_1)r_{1}^{-1} &\equiv (ks_2 - z_2)r_{2}^{-1} \pmod{n} \\
-ks_1r_2 - z_1r_2 &\equiv ks_2r_1 - z_2r_1 \pmod{n} \\
-k &\equiv \frac{z_1r_2 - z_2r_1}{s_1r_2 - s_2r_1} \pmod{n} \\
+(ks_1 - z_1)r^{-1} &\equiv (ks_2 - z_2)r^{-1} \pmod{n} \\
+(ks_1 - z_1) &\equiv (ks_2 - z_2) \pmod{n} \\
+k(s_1 - s_2) &\equiv z_1 - z_2 \pmod{n} \\
+k &\equiv \frac{z_1 - z_2}{s_1 - s_2} \pmod{n}
 \end{align}
 $$
 Now, once we have $k$, using equation $(10)$, $d_A$ can be evaluated.
