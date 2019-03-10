@@ -7,6 +7,10 @@ deps: FORCE
 	. ./venv && pip3 install -r requirements.txt
 
 test: FORCE
-	. ./venv && python -m unittest discover -s ecc/tests/
+	. ./venv && python -m unittest
+
+clean: FORCE
+	find . -name "__pycache__" -exec rm -r {} +
+	find . -name "*.pyc" -exec rm {} +
 
 FORCE:
