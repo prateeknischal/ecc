@@ -7,7 +7,7 @@ which uses Elliptic Curve Cryptography.
 
 ### Procedure to generate signature
 
-For a Given curve and it's parameters, $(CURVE, G, n)$, where $nG = O$ where $O$
+For a Given curve and it's parameters, $(\text{CURVE}, G, n)$, where $nG = O$ where $O$
 is identity element and $n$ is prime. This is required so that every element in
 $\mathbb{Z/nZ}$ except $0$ is invertible.
 
@@ -17,7 +17,7 @@ is the public key.
 * $d_A \in [1, n-1]$.
 * Find the public key curve point $Q_A = d_AG$.
 
-1. Calculate $e = HASH(m)$, where $HASH$ is a Cryptographic hash function such
+1. Calculate $e = \text{HASH}(m)$, where $\text{HASH}$ is a Cryptographic hash function such
 as SHA-2 and $m$ is the message.
 2. $z$ be the $L_n$ leftmost bits of $e$, where $L_n$ is the bitlength of $n$.
 3. Select a Random number $k \in [1, n-1]$.
@@ -35,7 +35,7 @@ on selection of $k$, which is written later in the text.
 * Check $nQ_A = O$.
 
 1. Verify $r, s \in [1, n-1]$.
-2. Calculate $e=HASH(m)$ using the same function.
+2. Calculate $e=\text{HASH}(m)$ using the same function.
 3. $z$ be the $L_n$ leftmost bits of $e$, where $L_n$ is the bit length of $n$.
 4. Find $w = s^{-1} \pmod{n}$.
 5. Find $u_1 = zw \pmod{n}$, $u_2 = rw \pmod{n}$.
