@@ -7,7 +7,7 @@
 ### Multiplicative order
 
 For a given integer $a$ in the field $\mathbb{Z/pZ}$, i.e. Prime field $p$, such
-that $gcd(a, n) = 1$, the smallest integer $k$ is the Multiplicative order of $a$
+that $gcd(a, p) = 1$, the smallest integer $k$ is the Multiplicative order of $a$
 iff
 $$
 a^k \equiv 1 \pmod{p}
@@ -42,7 +42,7 @@ $$
 \right.
 $$
 
-### Translation of Legendre symbol into Fermat's little theorem
+### Translation of Legendre symbol using Fermat's little theorem
 
 The Legendre symbols can be evaluated using Fermat's little theorem.
 For $a$ in $\mathbb{Z/pZ}$, what $p$ is and odd prime such that $gcd(a, p) = 1$,
@@ -60,7 +60,7 @@ a^{\frac{p - 1}{2}} \equiv (x^2)^{\frac{p - 1}{2}} \equiv x^{p-1} \equiv 1 \pmod
 $$
 thus, satisfying the equation.
 
-Since, $a^{\frac{p - 1}{2}} \equiv 1 \pmod{1}$ is solvable for $a$ and is of
+Since, $a^{\frac{p - 1}{2}} \equiv 1 \pmod{p}$ is solvable for $a$ and is of
 degree $\frac{p - 1}{2}$, there can't me more than $\frac{p - 1}{2}$ roots for
 this equation ([Lagrange's Theorem](https://en.wikipedia.org/wiki/Lagrange%27s_theorem_(number_theory))).
 
@@ -82,14 +82,14 @@ co-prime to $p$ is congruent modulo a power of $g$.
 It can also be explained as Suppose the Set $S = \{n : gcd(n, p) = 1, n \in \mathbb{Z/pZ}\}$,
 there exists a $k$ for each element $n$ in the set $S$ such that $g^k \equiv n \pmod{p}$.
 
-A number $g$ is a primitive root then then Multiplicative Order for m is $\varphi(n)$,
+A number $g$ is a primitive root then then Multiplicative Order for $g$ is $\varphi\left (n \right )$,
 where $\varphi$ is the **Euler Totient Function**.
 
 **Claim**: $\left (\frac{g}{p} \right ) = -1$, where g is a primitive root
 
 **Proof**
 
-Since, $g^{p-1} \equiv 1 \pmod{p}$ (for a prime $\varphi{p} = p - 1$), and $p-1$
+Since, $g^{p-1} \equiv 1 \pmod{p}$ (for a prime $\varphi\left (n \right ) = p - 1$), and $p-1$
 is the multiplicative order, $g^k \not\equiv 1 \pmod{p}$ for $k < p - 1$.
 
 $$
